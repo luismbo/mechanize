@@ -4,6 +4,18 @@
 (defclass form (html-element) ())
 (defclass link (html-element) ())
 
+(defmethod print-object ((object link) stream)
+  (print-unreadable-object (object stream :type t)
+    (format stream "~A" (dom:get-attribute object "href"))))
+
+(defmethod print-object ((object form) stream)
+  (print-unreadable-object (object stream :type t)
+    (format stream "~A => ~A ~A"
+            (dom:get-attribute object "name")
+            (let ((method (dom:get-attribute object "method")))
+              (if (string= "" method) "GET" method))
+            (dom:get-attribute object "action"))))
+
 (defun process-html-document (document)
   (iter (for el :in-dom document)
     (when (dom:element-p el)

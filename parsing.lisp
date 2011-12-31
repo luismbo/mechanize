@@ -2,11 +2,25 @@
 
 (defclass html-element (cxml-dom::element) ())
 (defclass form (html-element) ())
+
 (defclass link (html-element) ())
+
+(defmethod href-of ((link link))
+  (dom:get-attribute link "href"))
+
+(defparameter *text-snippet-length* 10)
+
+(defun string-snippet (string)
+  (let ((snippet (subseq string 0 (min *text-snippet-length* (length string)))))
+    (if (> (length string) *text-snippet-length*)
+        (concatenate 'string snippet " [...]")
+        snippet)))
 
 (defmethod print-object ((object link) stream)
   (print-unreadable-object (object stream :type t)
-    (format stream "~A" (dom:get-attribute object "href"))))
+    (format stream "~S ~A"
+            (string-snippet (inner-text object))
+            (href-of object))))
 
 (defmethod print-object ((object form) stream)
   (print-unreadable-object (object stream :type t)

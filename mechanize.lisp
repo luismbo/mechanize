@@ -132,27 +132,9 @@
   (remf args :agent)
   (apply #'agent-request agent :get uri args))
 
+(defun absolute-uri (uri &key (agent *agent*) (page (last-response agent)))
+  (puri:enough-uri uri (uri-of page)))
 
-;;;; Querying
-
-(defun query (query &optional (object (last-response)))
-  (query-object object :css query))
-
-(defun xquery (query &optional (object (last-response)))
-  (query-object object :xpath query))
-
-(defmethod query-object ((object page) method query)
-  (query-object (dom:first-child (content-of object)) method query))
-
-(defmethod query-object (object (method (eql :css)) query)
-  (css-selectors:query query object))
-
-(defmethod query-object (object (method (eql :xpath)) query)
-  (xpath:with-namespaces ((nil (dom:namespace-uri object)))
-    (xpath:map-node-set->list #'identity (xpath:evaluate query object))))
-
-(defun links (&key (node (last-response)))
-  (query "a" node))
-
-(defun forms (&key (node (last-response)))
-  (query "form" node))
+(defmethod click ((link link) &key (agent *agent*))
+  (get (absolute-uri (href-of link) :agent agent)
+       :agent agent))

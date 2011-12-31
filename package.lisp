@@ -7,7 +7,8 @@
   (:import-from :alexandria
                 #:with-unique-names
                 #:once-only
-                #:switch)
+                #:switch
+                #:length=)
   (:export
    ;; Agent
    #:*agent*
@@ -18,6 +19,8 @@
    #:back
    #:last-response
    #:saving-excursion
+   #:click
+   #:absolute-uri
 
    ;; Responses
    #:response
@@ -45,7 +48,7 @@
    #:query
    #:xquery
    #:inner-text
-   ))
+   #:href-of))
 
 (defpackage :mechanize-user
   (:use :cl :mechanize)

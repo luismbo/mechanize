@@ -15,4 +15,6 @@
   ((:file "package")
    (:file "history")
    (:file "user-agents")
+   (:file "parsing")
+   (:file "querying")
    (:file "mechanize")))

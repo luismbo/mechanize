@@ -39,3 +39,9 @@
            (values (cxml:parse (content-of response)
                                (cxml-dom:make-dom-builder))
                    'xml-page)))))
+
+(defun inner-text (object &optional splice stream)
+  (let ((object* (etypecase object
+                   (page (content-of object))
+                   ((or dom:element dom:document list) object))))
+    (buildnode:text-of-dom-snippet object* splice stream)))

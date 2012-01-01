@@ -31,13 +31,24 @@
             (string-snippet (inner-text object))
             (href-of object))))
 
+(defmethod action-of ((object form))
+  (dom:get-attribute object "action"))
+
+(defmethod method-of ((object form))
+  (let ((method (dom:get-attribute object "method")))
+    (if (string= "" method)
+        :get
+        (make-keyword (string-upcase method)))))
+
+(defmethod name-of ((object form))
+  (dom:get-attribute object "name"))
+
 (defmethod print-object ((object form) stream)
   (print-unreadable-object (object stream :type t)
     (format stream "~A => ~A ~A"
-            (dom:get-attribute object "name")
-            (let ((method (dom:get-attribute object "method")))
-              (if (string= "" method) "GET" method))
-            (dom:get-attribute object "action"))))
+            (name-of object)
+            (method-of object)
+            (action-of object))))
 
 (defun process-html-document (document)
   (iter (for el :in-dom document)

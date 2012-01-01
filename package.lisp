@@ -8,7 +8,8 @@
                 #:with-unique-names
                 #:once-only
                 #:switch
-                #:length=)
+                #:length=
+                #:make-keyword)
   (:export
    ;; Agent
    #:*agent*
@@ -48,7 +49,10 @@
    #:query
    #:xquery
    #:inner-text
-   #:href-of))
+   #:href-of
+   #:action-of
+   #:method-of
+   #:name-of))
 
 (defpackage :mechanize-user
   (:use :cl :mechanize)

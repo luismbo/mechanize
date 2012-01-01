@@ -30,12 +30,30 @@
       (setf links (filter-elements links href :key #'href-of)))
     links))
 
-(defun link (&key text href (node (last-response)))
-  (let ((list (links :text text :href href :node node)))
-    (unless (length= 1 list)
-      (warn "Found ~S links matching :text ~S. Returning first."
-            (length list) text))
-    (first list)))
+(defun find-matching-node (object-kind finder criteria)
+  (let ((matches (apply finder criteria)))
+    (cond ((null matches)
+           (error "couldn't find any ~As matching ~S."
+                  object-kind criteria))
+          ((not (length= 1 matches))
+           (warn "found ~S ~As matching ~S. Returning first."
+                 (length list) object-kind criteria)))
+    (first matches)))
 
-(defun forms (&key (node (last-response)))
-  (query "form" node))
+(defun link (&rest criteria &key text href (node (last-response)))
+  (declare (ignore text href node))
+  (find-matching-node "link" #'links criteria))
+
+(defun forms (&key action name method (node (last-response)))
+  (let ((forms (query "form" node)))
+    (when method
+      (setf forms (remove method forms :key #'method-of :test-not #'eq)))
+    (when action
+      (setf forms (filter-elements forms action :key #'action-of)))
+    (when name
+      (setf forms (filter-elements forms name :key #'name-of)))
+    forms))
+
+(defun form (&rest criteria &key action name method (node (last-response)))
+  (declare (ignore action name method node))
+  (find-matching-node "form" #'forms criteria))

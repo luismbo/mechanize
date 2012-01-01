@@ -8,12 +8,15 @@
 (defmethod href-of ((link link))
   (dom:get-attribute link "href"))
 
-(defparameter *text-snippet-length* 10)
+(defparameter *text-snippet-length* 15)
+(defparameter *text-snippet-marker* "...")
 
 (defun string-snippet (string)
-  (let ((snippet (subseq string 0 (min *text-snippet-length* (length string)))))
-    (if (> (length string) *text-snippet-length*)
-        (concatenate 'string snippet " [...]")
+  (let ((snippet (subseq string 0 (min *text-snippet-length* (length string))))
+        (marker-length (length *text-snippet-marker*)))
+    (if (> (length string) (- *text-snippet-length* marker-length))
+        (replace snippet *text-snippet-marker*
+                 :start1 (- (length snippet) marker-length))
         snippet)))
 
 (defmethod print-object ((object link) stream)

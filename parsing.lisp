@@ -19,6 +19,12 @@
                  :start1 (- (length snippet) marker-length))
         snippet)))
 
+(defmethod print-object ((object html-element) stream)
+  (print-unreadable-object (object stream :type t)
+    (format stream "~A ~S"
+            (dom:tag-name object)
+            (string-snippet (inner-text object)) )))
+
 (defmethod print-object ((object link) stream)
   (print-unreadable-object (object stream :type t)
     (format stream "~S ~A"

@@ -37,7 +37,7 @@
                   object-kind criteria))
           ((not (length= 1 matches))
            (warn "found ~S ~As matching ~S. Returning first."
-                 (length list) object-kind criteria)))
+                 (length matches) object-kind criteria)))
     (first matches)))
 
 (defun link (&rest criteria &key text href (node (last-response)))

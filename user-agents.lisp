@@ -1,7 +1,7 @@
 (in-package :mechanize)
 
 (defparameter *user-agent-aliases*
-  `(:mechanize ,(format nil "Mechanize~@[/~A~] (~A~@[ ~A~]; ~A;~@[ ~A;~] http://common-lisp.net/project/mechanize/)"
+  `(:mechanize ,(format nil "Mechanize~@[/~A~] (~A~@[ ~A~]; ~A;~@[ ~A;~] https://github.com/luismbo/mechanize/)"
                         (ignore-errors
                          (asdf:component-version (asdf:find-system :mechanize)))
                         (lisp-implementation-type)

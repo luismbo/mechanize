@@ -5,54 +5,57 @@
   (:nicknames #:mech)
   (:shadow #:get)
   (:import-from :alexandria
-                #:with-unique-names
+                #:length=
+                #:make-keyword
                 #:once-only
                 #:switch
-                #:length=
-                #:make-keyword)
+                #:with-unique-names)
   (:export
    ;; Agent
    #:*agent*
-   #:agent
-   #:user-agent-aliases
-   #:get
-   #:reload
-   #:back
-   #:last-response
-   #:saving-excursion
-   #:click
    #:absolute-uri
+   #:agent
+   #:back
+   #:click
+   #:get
+   #:last-response
+   #:post
+   #:reload
+   #:saving-excursion
+   #:submit
+   #:user-agent-aliases
+   #:with-agent
 
    ;; Responses
-   #:response
+   #:content-of
    #:get-header
+   #:headers-of
+   #:method-of
+   #:response
    #:response-header
    #:status-code-of
-   #:method-of
-   #:uri-of
    #:status-of
-   #:headers-of
-   #:content-of
+   #:uri-of
 
    #:file
-   #:page
    #:html-page
-   #:xml-page
+   #:page
    #:xhtml-page
+   #:xml-page
 
    ;; Parsing and Querying
+   #:action-of
    #:form
    #:forms
+   #:href-of
+   #:html-element
+   #:inner-text
    #:link
    #:links
-   #:html-element
-   #:query
-   #:xquery
-   #:inner-text
-   #:href-of
-   #:action-of
    #:method-of
-   #:name-of))
+   #:name-of
+   #:query
+   #:xquery))
 
 (defpackage :mechanize-user
   (:use :cl :mechanize)

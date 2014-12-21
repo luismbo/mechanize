@@ -50,6 +50,16 @@
             (method-of object)
             (action-of object))))
 
+(defmethod describe-object ((form form) stream)
+  (format stream "Form: ~A~%" (name-of form))
+  (format stream "Action: ~A ~A~%" (method-of form) (action-of form))
+  (terpri stream)
+  (dolist (input (query "input" form))
+    (format stream "   ~S ~S ~S~%"
+            (dom:get-attribute input "type")
+            (dom:get-attribute input "name")
+            (dom:get-attribute input "value"))))
+
 (defun process-html-document (document)
   (iter (for el :in-dom document)
     (when (dom:element-p el)

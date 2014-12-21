@@ -131,9 +131,13 @@
 
 ;;; TODO: maybe define a macro that shows the extra drakma options we
 ;;; allow in the arguments?
-(defun get (uri &rest args &key (agent *agent*))
+(defun get (uri &rest args &key (agent *agent*) &allow-other-keys)
   (remf args :agent)
   (apply #'agent-request agent :get uri args))
+
+(defun post (uri &rest args &key (agent *agent*) &allow-other-keys)
+  (remf args :agent)
+  (apply #'agent-request agent :post uri args))
 
 (defun absolute-uri (uri &key (agent *agent*) (page (last-response agent)))
   (puri:enough-uri uri (uri-of page)))
@@ -141,3 +145,25 @@
 (defmethod click ((link link) &key (agent *agent*))
   (get (absolute-uri (href-of link) :agent agent)
        :agent agent))
+
+(defmethod submit ((form form) parameters &key (agent *agent*))
+  (let* ((default (mapcar (lambda (input)
+                            (cons (dom:get-attribute input "name")
+                                  (dom:get-attribute input "value")))
+                          (query "input" form)))
+         (custom (loop for (param value) on parameters by #'cddr
+                       collect (cons (etypecase param
+                                       (keyword (string-downcase param))
+                                       (string param))
+                                     value)))
+         (parameters (remove-duplicates (append default custom)
+                                        :test #'string= :key #'car))
+         (uri (absolute-uri (action-of form) :agent agent)))
+    (ecase (method-of form)
+      (:get
+       (setf (puri:uri-query uri)
+             ;; FIXME: manage encodings.
+             (drakma::alist-to-url-encoded-string parameters :latin-1))
+       (get uri :agent agent))
+      (:post
+       (post uri :agent agent :parameters parameters)))))

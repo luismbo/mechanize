@@ -82,6 +82,9 @@
 (defclass xml-page (page) ())
 (defclass xhtml-page (xml-page html-page) ())
 
+(defmethod query-object ((object page) method query)
+  (query-object (dom:first-child (content-of object)) method query))
+
 
 ;;;; Agent Operations
 

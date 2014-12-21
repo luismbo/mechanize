@@ -6,9 +6,6 @@
 (defun xquery (query &optional (object (last-response)))
   (query-object object :xpath query))
 
-(defmethod query-object ((object page) method query)
-  (query-object (dom:first-child (content-of object)) method query))
-
 (defmethod query-object (object (method (eql :css)) query)
   (css-selectors:query query object))
 

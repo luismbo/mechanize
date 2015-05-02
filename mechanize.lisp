@@ -163,7 +163,9 @@
       (:get
        (setf (puri:uri-query uri)
              ;; FIXME: manage encodings.
-             (drakma::alist-to-url-encoded-string parameters :latin-1))
+             (drakma::alist-to-url-encoded-string parameters
+                                                  :latin-1
+                                                  #'drakma:url-encode))
        (get uri :agent agent))
       (:post
        (post uri :agent agent :parameters parameters)))))

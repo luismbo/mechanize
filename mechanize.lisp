@@ -74,6 +74,43 @@
 (defun get-header (name &key (response (last-response)) (test #'equalp))
   (response-header response name :test test))
 
+(defgeneric response-media-type (response)
+  (:method ((response response))
+    (first (ppcre:split ";" (response-header response :content-type)))))
+
+(defun response-file-type (response)
+  (mimes:mime-file-type (response-media-type response)))
+
+(defgeneric write-content-to-stream (content stream)
+  (:method ((content string) stream)
+    (write-string content stream))
+  (:method ((content dom:node) stream)
+    (dom:map-document (cxml:make-character-stream-sink stream)
+                      content))
+  (:method ((content array) stream)
+    (write-sequence content stream)))
+
+(defun content-element-type (response)
+  (if (typep (content-of response) '(and array (not string)))
+      '(unsigned-byte 8)
+      uiop:*default-stream-element-type*))
+
+(defgeneric display (response)
+  (:method ((response response))
+    (uiop:with-temporary-file (:pathname path :stream stream
+                               :type (response-file-type response)
+                               :element-type (content-element-type response)
+                               :keep t)
+      (write-content-to-stream (content-of response) stream)
+      (close stream)
+      (uiop:run-program
+       (format nil
+               (cond ((featurep :darwin) "open ~a")
+                     ((featurep :windows) "start ~a")
+                     ((featurep :linux) "x-www-browser ~a")
+                     (t (error "Sorry, don't know how to display files.")))
+               (uiop:native-namestring path))))))
+
 ;;; Not yet convinced about the usefulness of all this... Is it just a
 ;;; sorry excuse to use CHANGE-CLASS? :-)
 (defclass file (response) ())

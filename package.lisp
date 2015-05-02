@@ -5,6 +5,7 @@
   (:nicknames #:mech)
   (:shadow #:get)
   (:import-from :alexandria
+                #:featurep
                 #:length=
                 #:make-keyword
                 #:once-only
@@ -28,11 +29,13 @@
 
    ;; Responses
    #:content-of
+   #:display
    #:get-header
    #:headers-of
    #:method-of
    #:response
    #:response-header
+   #:response-media-type
    #:status-code-of
    #:status-of
    #:uri-of

@@ -9,6 +9,9 @@
                :iterate
                :buildnode
                :css-selectors
+               :trivial-features
+               :trivial-mimes
+               :uiop
                :xpath)
   :serial t
   :components
